@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+using namespace std;
+int n, a[100][100];
+vector<string> res;
+int check = 0;
+bool ok[100][100];
+void khoitao()
+{
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> a[i][j];
+			ok[i][j] = false;
+		}
+	}
+	res.clear();
+	check = 0;
+}
+void Try(int i, int j, string s)
+{
+	if (a[n][n] == 0)
+		return;
+	if (i == 1 && j == 1 && a[i][j] == 0)
+	{
+		check = 0;
+		return;
+	}
+	if (i == n && j == n && a[n][n] == 1)
+	{
+		res.push_back(s);
+		check = 1;
+		return;
+	}
+	if (i < n && a[i + 1][j] == 1 && !ok[i + 1][j])
+	{
+		ok[i][j] = true;
+		Try(i + 1, j, s + "D");
+		ok[i][j] = false;
+	}
+	if (j < n && a[i][j + 1] == 1 && !ok[i][j + 1])
+	{
+		ok[i][j] = true;
+		Try(i, j + 1, s + "R");
+		ok[i][j] = false;
+	}
+	if (j > 1 && a[i][j - 1] == 1 && !ok[i][j - 1])
+	{
+		ok[i][j] = true;
+		Try(i, j - 1, s + "L");
+		ok[i][j] = false;
+	}
+	if (i > 1 && a[i - 1][j] == 1 && !ok[i - 1][j])
+	{
+		ok[i][j] = true;
+		Try(i - 1, j, s + "U");
+		ok[i][j] = false;
+	}
+	if ((i < n && j < n && (a[i + 1][j] == 0 || a[i][j + 1] == 0 || a[i][j - 1] == 0 || a[i - 1][j] == 0)) || i > n || j > n)
+		return;
+}
+int main()
+{
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		cin >> n;
+		khoitao();
+		Try(1, 1, "");
+		if (!check)
+			cout << -1 << endl;
+		else
+		{
+			sort(res.begin(), res.end());
+			for (int i = 0; i < res.size(); i++)
+			{
+				cout << res[i] << " ";
+			}
+			cout << endl;
+		}
+	}
+	return 0;
+}
